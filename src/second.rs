@@ -1,27 +1,27 @@
-pub struct List {
-    head: Option<Box<Node>>,
+pub struct List<T> {
+    head: Option<Box<Node<T>>>,
 }
 
-struct Node {
-    elem: i32,
-    next: Option<Box<Node>>,
+struct Node<T> {
+    elem: T,
+    next: Option<Box<Node<T>>>,
 }
 
 
-impl List {
+impl<T> List<T> {
 	pub fn new() -> Self {
 		List {head: Option::None}
 	}
 
-	pub fn push(&mut self, elem: i32) {
-		let new_node: Box<Node> = Box::new(Node {
+	pub fn push(&mut self, elem: T) {
+		let new_node= Box::new(Node {
 			elem,
 			next: std::mem::replace(&mut self.head, Option::None)
 		});
 		self.head = Option::Some(new_node)
 	}
 
-	pub fn pop(&mut self) -> Option<i32> {
+	pub fn pop(&mut self) -> Option<T> {
 		match std::mem::replace(&mut self.head, Option::None) {
 			Option::None => Option::None,
 			Option::Some(node) => {
@@ -32,7 +32,7 @@ impl List {
 	}
 }
 
-impl Drop for List {
+impl <T> Drop for List<T> {
 	fn drop(&mut self) {
 		let mut current = std::mem::replace(&mut self.head, Option::None);
 			while let Option::Some(mut node) = current {
@@ -47,7 +47,7 @@ mod test {
 
 	#[test]
 	fn is_empty() {
-		let mut list = List::new();
+		let mut list: List<i32> = List::new();
 		assert_eq!(list.pop(), None);
 	}
 
